@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"> <!-- 声明文档的字符集 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- 设置网页视口的元数据标签 -->
+    <title>MC-NeRF</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap-4.4.1.css" rel="stylesheet"> <!-- 表示被链接的文件是一个样式表文件 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+  </head>
+
+  <!-- cover -->
+  <section>
+    <!-- 内容划分元素 -->
+    <div class="jumbotron text-center mt-0"> <!--jumbotron类可用于创建具有特殊样式的大型容器，text-center类用于居中文本，而mt-0类用于删除顶部的外边距-->
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2> MC-NeRF: Muti-Camera Neural Radiance Fields for</h2>
+            <h2> Muti-Camera Image Acquisition Systems </h2>
+            <h4 style="color:#5a6268;">Current state: Continue Updating(last time:2023.11.10)</h4>
+            <hr>
+            <h6> 
+                <a target="_blank">Yu Gao</a><sup>1</sup>,
+                <a target="_blank">Lutong Su</a><sup>1</sup>, 
+                <a target="_blank">Hao Liang</a><sup>1</sup>, 
+                <a target="_blank">Yufeng Yue</a><sup>1</sup>, 
+                <a target="_blank">Yi Yang</a><sup>1†</sup>, 
+                <a target="_blank">Mengyin Fu</a><sup>1</sup>
+            <p>
+                <sup>1</sup>Beijing Institute of Technology &nbsp;&nbsp; 
+                <sup>†</sup>Corresponding Author &nbsp;&nbsp; 
+              </p>
+            <div class="row justify-content-center">
+              <div class="column">
+                  <p class="mb-5"><a class="btn btn-large btn-light" href="https://arxiv.org/abs/2309.07846" role="button"  target="_blank">
+                    <i class="fa fa-file"></i> Paper</a> </p>
+              </div>
+              <div class="column">
+                  <p class="mb-5"><a class="btn btn-large btn-light" href="https://github.com/SkylerGao/MC_NeRF" role="button"  target="_blank">
+                    <i class="fa fa-github-alt"></i> Code</a> </p>
+              </div>
+              <div class="column">
+                <p class="mb-5"><a class="btn btn-large btn-light" href="https://drive.google.com/drive/my-drive" role="button"  target="_blank">
+                  <i class="fa fa-database"></i> Dataset</a> </p>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- abstract -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h3>Abstract</h3>
+            <hr style="margin-top:0px">
+              <!--<img class="img-fluid" src="images/L2G-NeRF.jpg">-->
+              <!-- <br><br> -->
+          <p class="text-justify">  Neural Radiance Fields (NeRF) employ multi-view images for 3D scene representation and have shown remarkable performance. As one of the primary sources of multi-view images, multi-camera systems encounter challenges such as varying intrinsic parameters and frequent pose changes.
+            Most previous NeRF-based methods often assume a global unique camera and seldom consider scenarios with multiple cameras. Besides, some pose-robust methods still remain susceptible to suboptimal solutions when poses are poor initialized. In this paper, we propose MC-NeRF, a method can jointly optimize both intrinsic and extrinsic parameters for bundle-adjusting Neural Radiance Fields. Firstly, we conduct a theoretical analysis to tackle the degenerate case and coupling issue that arise from the joint optimization between intrinsic and extrinsic parameters. Secondly, based on the proposed solutions, we introduce an efficient calibration image acquisition scheme for multi-camera systems, including the design of calibration object. Lastly, we present a global end-to-end network with training sequence that enables the regression of intrinsic and extrinsic parameters, along with the rendering network. Moreover, most existing datasets are designed for unique camera, we create a new dataset that includes four different styles of multi-camera acquisition systems, allowing readers to generate custom datasets. Experiments confirm the effectiveness of our method when each image corresponds to different camera parameters. Specifically, we adopt up to 110 images with 110 different intrinsic and extrinsic parameters, to achieve 3D scene representation without providing initial poses.</p>
+          <p class="text-justify"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+
+  <!-- Overview -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+            <h3>Overview</h3>
+            <hr style="margin-top:0px">
+            <img class="img-fluid" src="image/overview.png">
+            <!-- <br><br> -->
+            <p class="text-justify">Overview of the proposed method. First, based on the designed process (as shown in Fig. 5), we obtain two sets of auxiliary images containing AprilTags, named P ack1 and P ack2. These image sets provide 3D coordinates in the world coordinate system and feature point coordinates in the images, which are utilized to establish reprojection loss functions. Second, the camera’s intrinsic and extrinsic parameters, which are constrained by the reprojection loss function, are used to generate sampling points. These points are then fed into a Multilayer Perceptron (MLP) that employs BARF-based progressive encoding for subsequent training.</p>
+            <!--<div class="embed-responsive embed-responsive-16by9">-->
+                <!-- <iframe style="clip-path: inset(1px 1px)" width="100%" height="100%" src="https://www.youtube.com/embed/jUkfatSaJtA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe> -->
+                <!--<iframe style="clip-path: inset(1px 1px)" width="100%" height="100%" src="https://www.youtube.com/embed/y8XP9Umt6Mw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+              </div>-->
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+
+  <!-- Exp.3  Extrinsic Parameters Regression -->
+  <section>
+    <div class="container">
+      <div>
+        <div class="row">
+          <div class="col-12 text-center">
+              <h3>Exp.3  Extrinsic Parameters Regression</h3>
+              <hr style="margin-top:0px">
+              <h4 style="margin-top:20px; margin-bottom:20px; color:#717980">Random pose initialization</h4>
+              <h5 style="margin-top:10px; margin-bottom:10px; color:#1183e7">L2G-NeRF</h5>
+              <ul>
+                <li>
+                  <img class="img-fluid" src="image/HalfBall_Style_L2G2.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Ball_Style_L2G2.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Room_Style_L2G2.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Array_Style_L2G2.gif">
+                </li>
+              </ul>
+              <table class="caption" style="width: 100%;">
+                <tr>
+                    <td style="width: 25%">HalfBall_Style_L2G</td>
+                    <td style="width: 25%">Ball_Style_L2G</td>
+                    <td style="width: 25%">Room_Style_L2G</td>
+                    <td style="width: 25%">Array_Style_L2G</td>
+                </tr>
+              </table>
+              <h5 style="margin-top:10px; margin-bottom:10px; color:#1183e7">barf</h5>
+              <ul>
+                <li>
+                  <img class="img-fluid" src="image/HalfBall_Style_BARF2.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Ball_Style_BARF2.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Room_Style_BARF2.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Array_Style_BARF2.gif">
+                </li>
+              </ul>
+              <table class="caption" style="width: 100%;">
+                <tr>
+                    <td style="width: 25%">HalfBall_Style_BARF</td>
+                    <td style="width: 25%">Ball_Style_BARF</td>
+                    <td style="width: 25%">Room_Style_BARF</td>
+                    <td style="width: 25%">Array_Style_BARF</td>
+                </tr>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+
+  <!-- Exp.4  Planar Image Alignment (2D) -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+            <h3>Exp.4  Planar Image Alignment (2D)</h3>
+            <hr style="margin-top:0px">
+              <ul>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/BARF.mp4" type="video/mp4">
+                  </video>
+              </li>
+              <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/L2G.mp4" type="video/mp4">
+                  </video>
+              </li>
+              <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/MC.mp4" type="video/mp4">
+                  </video>
+              </li>
+              <li>
+                <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/WOMC.mp4" type="video/mp4">
+                </video>
+              </li>
+              <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/GT.mp4" type="video/mp4">
+                  </video>
+              </li>
+              </ul>
+              <table class="caption" style="width: 100%;">
+                <tr>
+                    <td style="width: 20%">BARF</td>
+                    <td style="width: 20%">L2G-NeRF</td>
+                    <td style="width: 20%">MC-NeRF(ours)</td>
+                    <td style="width: 20%">MC-NeRF(w/o)</td>
+                    <td style="width: 20%">Ground_truth</td>
+                </tr>
+              </table>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+
+  <!-- Exp.5  Fix Step VS Global optimization -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+            <h3>Exp.5  Fix Step VS Global optimization</h3>
+            <hr style="margin-top:0px">
+            <h4 style="margin-top:20px; margin-bottom:20px; color:#717980">Ball Style</h4>
+              <ul>
+                <li>
+                  <video width="35%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/tubiao1.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/RGB/ball_1_4.mp4" type="video/mp4">
+                  </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/RGB/ball_5_8.mp4" type="video/mp4">
+                  </video>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <video width="35%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/tubiao2.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/Depth/ball_depth_1_4.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/Depth/ball_depth_5_8.mp4" type="video/mp4">
+                  </video>
+              </ul>
+              <h4 style="margin-top:20px; margin-bottom:20px; color:#717980">HalfBall Style</h4>
+              <ul>
+                <li>
+                  <video width="35%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/tubiao1.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/RGB/halfball_1_4.mp4" type="video/mp4">
+                  </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/RGB/halfball_5_8.mp4" type="video/mp4">
+                  </video>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <video width="35%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/tubiao2.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/Depth/halfball_depth_1_4.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/Depth/halfball_depth_5_8.mp4" type="video/mp4">
+                  </video>
+              </ul>
+              <h4 style="margin-top:20px; margin-bottom:20px; color:#717980">Room Style</h4>
+              <ul>
+                <li>
+                  <video width="35%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/tubiao1.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/RGB/room_1_4.mp4" type="video/mp4">
+                  </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/RGB/room_5_8.mp4" type="video/mp4">
+                  </video>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <video width="35%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/tubiao2.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/Depth/room_depth_1_4.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/Depth/room_depth_5_8.mp4" type="video/mp4">
+                  </video>
+              </ul>
+              <h4 style="margin-top:20px; margin-bottom:20px; color:#717980">Array Style</h4>
+              <ul>
+                <li>
+                  <video width="35%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/tubiao1.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/RGB/array_1_4.mp4" type="video/mp4">
+                  </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/RGB/array_5_8.mp4" type="video/mp4">
+                  </video>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <video width="35%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/tubiao2.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/Depth/array_depth_1_4.mp4" type="video/mp4">
+                    </video>
+                </li>
+                <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/Depth/array_depth_5_8.mp4" type="video/mp4">
+                  </video>
+              </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+
+  <!-- Supplementary Experiments -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+            <h3>Supplementary Experiments</h3>
+            <hr style="margin-top:0px">
+            <h4 style="margin-top:20px; margin-bottom:20px; color:#717980">Performance Comparison of Different Methods</h4>
+              <ul>
+                <li>
+                  <img class="img-fluid" src="image/Other Methods/NERF.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Other Methods/BARF.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Other Methods/L2G_Paper.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Other Methods/MC.gif">
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <img class="img-fluid" src="image/Other Methods/NERF-Depth.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Other Methods/BARF-Depth.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Other Methods/L2G_Depth_paper.gif">
+                </li>
+                <li>
+                  <img class="img-fluid" src="image/Other Methods/MC_Depth.gif">
+                </li>
+              </ul>
+              <table class="caption" style="width: 100%;">
+                <tr>
+                    <td style="width: 25%">NeRF</td>
+                    <td style="width: 25%">BARF</td>
+                    <td style="width: 25%">L2G_NeRF</td>
+                    <td style="width: 25%">MC-NeRF(ours)</td>
+                </tr>
+              </table>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+            <h3>The variation of the camera's position and field of view(test dataset)</h3>
+            <hr style="margin-top:0px">
+            <p class="text-justify">The GIFs below illustrate changes in camera poses and field of view (FOV) across four different scenarios in the test set. Each animation showcases variations in camera pose from top, right, and front views, while FOV changes are demonstrated through adjustments in camera focal length.The fixed coordinate system at the image center symbolizes the world, whereas the mobile coordinate system denotes the camera, with the z-axis in blue, the x-axis in red, and the y-axis in green. The color of the moving sphere and the zoom lens camera model changes synchronously with the field of view (FOV).</p>
+            <ul>
+              <li>
+                <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/ball.mp4" type="video/mp4">
+                </video>
+              </li>
+              <li>
+                <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                  <source src="image/halfball.mp4" type="video/mp4">
+                </video>
+              </li>
+            </ul>
+            <table class="caption" style="width: 100%;">
+              <tr>
+                <td style="width: 50%">Ball Style</td>
+                <td style="width: 50%">HalfBall Style</td>
+              </tr>
+              </table>
+              <ul>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/room.mp4" type="video/mp4">
+                  </video>
+                </li>
+                <li>
+                  <video width="100%" playsinline="" autoplay="autoplay" loop="loop" preload="" muted="">
+                    <source src="image/array.mp4" type="video/mp4">
+                  </video>
+                </li>
+              </ul>   
+              <table class="caption" style="width: 100%;">
+                <tr>
+                  <td style="width: 50%">Room Style</td>
+                  <td style="width: 50%">Array Style</td>
+                </tr>
+                </table>   
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+
+  <!-- citing -->
+  <div class="container">
+    <div class="row ">
+      <div class="col-12">
+          <h3>Citation</h3>
+          <hr style="margin-top:0px">
+              <pre style="background-color: #e9eeef;padding: 1.25em 1.5em">
+<code>@misc{gao2023mcnerf,
+  title={MC-NeRF: Muti-Camera Neural Radiance Fields for Muti-Camera Image Acquisition Systems}, 
+  author={Yu Gao and Lutong Su and Hao Liang and Yufeng Yue and Yi Yang and Mengyin Fu},
+  year={2023},
+  eprint={2309.07846},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV}
+}</code></pre>
+          <hr>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center" style="margin-bottom:10px">
+      Thanks to <a href="https://lioryariv.github.io/" target="_blank">Lior Yariv</a> for the website template.
+  </footer>
+
+</body>
+</html>
