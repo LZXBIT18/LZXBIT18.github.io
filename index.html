@@ -22,10 +22,10 @@
             <h4 style="color:#5a6268;">Current state: Continue Updating(last time:2023.11.10)</h4>
             <hr>
             <h6> 
-                <a target="_blank">Yu Gao</a><sup>1</sup>,
-                <a target="_blank">Lutong Su</a><sup>1</sup>, 
-                <a target="_blank">Hao Liang</a><sup>1</sup>, 
-                <a target="_blank">Yufeng Yue</a><sup>1</sup>, 
+                <a target="_blank">Zhaoxiang Liang</a><sup>1</sup>,
+                <a target="_blank">Yu Gao</a><sup>1</sup>, 
+                <a target="_blank">Dianyi Yang</a><sup>1</sup>, 
+                <a target="_blank">Tianji Jiang</a><sup>1</sup>, 
                 <a target="_blank">Yi Yang</a><sup>1†</sup>, 
                 <a target="_blank">Mengyin Fu</a><sup>1</sup>
             <p>
@@ -33,18 +33,18 @@
                 <sup>†</sup>Corresponding Author &nbsp;&nbsp; 
               </p>
             <div class="row justify-content-center">
-              <div class="column">
+              <!-- <div class="column">
                   <p class="mb-5"><a class="btn btn-large btn-light" href="https://arxiv.org/abs/2309.07846" role="button"  target="_blank">
                     <i class="fa fa-file"></i> Paper</a> </p>
-              </div>
+              </div> -->
               <div class="column">
-                  <p class="mb-5"><a class="btn btn-large btn-light" href="https://github.com/SkylerGao/MC_NeRF" role="button"  target="_blank">
+                  <p class="mb-5"><a class="btn btn-large btn-light" href="https://github.com/LZXBIT18/Dynamic_by_editing" role="button"  target="_blank">
                     <i class="fa fa-github-alt"></i> Code</a> </p>
               </div>
-              <div class="column">
+              <!-- <div class="column">
                 <p class="mb-5"><a class="btn btn-large btn-light" href="https://drive.google.com/drive/my-drive" role="button"  target="_blank">
-                  <i class="fa fa-database"></i> Dataset</a> </p>
-            </div>
+                  <i class="fa fa-database"></i> Dataset</a> </p> -->
+            <!-- </div> -->
             </div>
           </div>
         </div>
@@ -76,9 +76,9 @@
         <div class="col-12 text-center">
             <h3>Overview</h3>
             <hr style="margin-top:0px">
-            <img class="img-fluid" src="image/overview.png">
+            <img class="img-fluid" src="image_our/pipeline.png">
             <!-- <br><br> -->
-            <p class="text-justify">Overview of the proposed method. First, based on the designed process (as shown in Fig. 5), we obtain two sets of auxiliary images containing AprilTags, named P ack1 and P ack2. These image sets provide 3D coordinates in the world coordinate system and feature point coordinates in the images, which are utilized to establish reprojection loss functions. Second, the camera’s intrinsic and extrinsic parameters, which are constrained by the reprojection loss function, are used to generate sampling points. These points are then fed into a Multilayer Perceptron (MLP) that employs BARF-based progressive encoding for subsequent training.</p>
+            <p class="text-justify">Overview of our pipeline. First, we spatially decompose the scene, using individual radiance fields to handle the static background and newly emerging objects. By sharing some network parameters and implementing composite rendering, we address the issue of quickly and high-quality integrating new objects into a reconstructed static scene. Second, we introduce a method for cross-field editing, which maps vehicles to their corresponding locations in the global scene by warping rays between different radiance fields. This allows for composite rendering of sub-fields while enabling real-time motion of multiple vehicles simultaneously. Third, we propose a method for estimating the 6-DOF of vehicles from sequences of target coordinates and scene information, guiding their movement. We reduce the reliance on precise pose inputs for dynamic editing. Estimation process includes 2 steps: Initially, we estimate rotation angles roughly through the displacement projection between frames. Subsequently, we refine the vehicle's 6-DOF with road constraints.</p>
             <!--<div class="embed-responsive embed-responsive-16by9">-->
                 <!-- <iframe style="clip-path: inset(1px 1px)" width="100%" height="100%" src="https://www.youtube.com/embed/jUkfatSaJtA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe> -->
                 <!--<iframe style="clip-path: inset(1px 1px)" width="100%" height="100%" src="https://www.youtube.com/embed/y8XP9Umt6Mw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
