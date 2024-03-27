@@ -78,7 +78,7 @@
             <hr style="margin-top:0px">
             <img class="img-fluid" src="image_our/pipeline++.png">
             <!-- <br><br> -->
-            <p class="text-justify">Overview of our pipeline. First, we spatially decompose the scene, using individual radiance fields to handle the static background and newly emerging objects. By sharing some network parameters and implementing composite rendering, we address the issue of quickly and high-quality integrating new objects into a reconstructed static scene. Second, we introduce a method for cross-field editing, which maps vehicles to their corresponding locations in the global scene by warping rays between different radiance fields. This allows for composite rendering of sub-fields while enabling real-time motion of multiple vehicles simultaneously. Third, we propose a method for estimating the 6-DOF of vehicles from sequences of target coordinates and scene information, guiding their movement. We reduce the reliance on precise pose inputs for dynamic editing. Estimation process includes 2 steps: Initially, we estimate rotation angles roughly through the displacement projection between frames. Subsequently, we refine the vehicle's 6-DOF with road constraints.</p>
+            <p class="text-justify">Overview of our pipeline. First, we spatially decompose the scene, using individual radiance fields to handle the static background and newly emerging objects. By sharing some network parameters and implementing composite rendering, we address the issue of quickly and high-quality integrating new objects into a reconstructed static scene. Second, we introduce a method for cross-field editing, which maps vehicles to their corresponding locations in the global scene by warping rays between different radiance fields. This allows for composite rendering of sub-fields while enabling real-time motion of multiple vehicles simultaneously. Third, we propose a method for estimating the 6-DOF of vehicles from sequences of target coordinates and scene information, guiding their movement. We reduce the reliance on precise pose inputs for dynamic editing. Estimation process includes 2 steps: Initially, we estimate rotation angles roughly through the displacement projection between frames. Subsequently, we refine the vehicle's 6-DOF with road constraints. The four block diagrams at the bottom briefly summarize the process, with the last three points corresponding to our main contributions.</p>
             <!--<div class="embed-responsive embed-responsive-16by9">-->
                 <!-- <iframe style="clip-path: inset(1px 1px)" width="100%" height="100%" src="https://www.youtube.com/embed/jUkfatSaJtA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe> -->
                 <!--<iframe style="clip-path: inset(1px 1px)" width="100%" height="100%" src="https://www.youtube.com/embed/y8XP9Umt6Mw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -89,13 +89,18 @@
   </section>
   <br>
   
+  <video width="320" height="240" controls>
+    <source src="IROS.mp4" type="video/mp4">
+    Your browser does not support the mp4 video tag.
+  </video>
+
   <!-- Exp.3  Extrinsic Parameters Regression -->
   <section>
     <div class="container">
       <div>
         <div class="row">
           <div class="col-12 text-center">
-              <h3>Exp.3  Extrinsic Parameters Regression</h3>
+              <h3>Exp.1  Add new objects quickly</h3>
               <hr style="margin-top:0px">
               <h4 style="margin-top:20px; margin-bottom:20px; color:#717980">Random pose initialization</h4>
               <h5 style="margin-top:10px; margin-bottom:10px; color:#1183e7">L2G-NeRF</h5>
