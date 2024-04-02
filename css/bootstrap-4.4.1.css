@@ -87,8 +87,8 @@ p {
 .myGif-container {
   display: flex;
   justify-content: center; /* 将图像水平居中 */
-  margin-left: auto; /* 页面左边缘等距 */
-  margin-right: auto; /* 页面右边缘等距 */
+  margin-left: 30px; /* 页面左边缘等距 */
+  margin-right: 30px; /* 页面右边缘等距 */
 }
 
 .myGif {
