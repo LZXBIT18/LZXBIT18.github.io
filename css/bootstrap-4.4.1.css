@@ -107,6 +107,14 @@ p {
   margin-right: auto; /* 右边距自动 */
 }
 
+.mybigGif2 {
+  width: 1000px;  /* 你想要的宽度 */
+  height: auto; /* 你想要的高度 */
+  object-fit: cover; /* 保持图片的比例 */
+  margin-left: auto; /* 左边距自动 */
+  margin-right: auto; /* 右边距自动 */
+}
+
 abbr[title],
 abbr[data-original-title] {
   text-decoration: underline;
