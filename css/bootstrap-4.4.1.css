@@ -100,7 +100,7 @@ p {
 }
 
 .mybigGif {
-  width: 800px;  /* 你想要的宽度 */
+  width: 900px;  /* 你想要的宽度 */
   height: auto; /* 你想要的高度 */
   object-fit: cover; /* 保持图片的比例 */
   margin-left: auto; /* 左边距自动 */
@@ -108,7 +108,7 @@ p {
 }
 
 .mybigGif2 {
-  width: 1000px;  /* 你想要的宽度 */
+  width: 1100px;  /* 你想要的宽度 */
   height: auto; /* 你想要的高度 */
   object-fit: cover; /* 保持图片的比例 */
   margin-left: auto; /* 左边距自动 */
